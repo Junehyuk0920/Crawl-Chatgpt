@@ -1,24 +1,31 @@
-async function getLogs() {
-    for (let i = 1; ; i++) {
-        const url = `./logs/${i}.txt`;
+async function sendQuery() {
+    const query = document.querySelector("input").value;
+    document.querySelector("input").value = '';
 
-        try {
-            const response = await fetch(url);
+    const DOM = `
+            <section>
+                <h2>${query}</h2>
+            </section>
+        `;
+    document.querySelector(".container").insertAdjacentHTML('beforeend', DOM);
+    const chatContainer = document.querySelector(".container");
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            if (!response.ok) break;
+    try {
+        const response = await fetch('server.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: query })
+        });
 
-            logs.push(await response.text());
-        } catch (e) {
-            break;
-        }
+        const data = await response.json();
+        const PRE = `
+            <pre>${data.result}</pre>
+        `;
+        let sections = document.querySelectorAll("section");
+        sections[sections.length - 1].insertAdjacentHTML('beforeend', PRE);
+    } catch (error) {
+        console.error("오류 발생:", error);
+        output.innerText = "실행 실패";
     }
-}
-
-let logs = [];
-
-async function main() {
-    logs = await getLogs();
-    logs.forEach(log => {
-        console.log(log)
-    })
 }
