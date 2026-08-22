@@ -1,2 +1,2 @@
 ## Crawl ChatGPT
-by @dev-zzephyr ( @Junehyuk0920 )
+by @dev-zzephyr (@Junehyuk0920)
